@@ -24,9 +24,10 @@ const Header = () => {
         <div className="flex h-20 items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
             <img src={logo} alt="Ashes to Beauty Logo" className="h-12 w-12 rounded-full object-cover" />
-            <div>
+            
+             <div className="flex items-center gap-2">
               <h1 className="text-xl font-bold text-primary">ASHES TO BEAUTY</h1>
-              <p className="text-xs text-muted-foreground">Charitable Initiative</p>
+              <span className="text-xs text-muted-foreground">Charitable Initiative</span>
             </div>
           </Link>
 
