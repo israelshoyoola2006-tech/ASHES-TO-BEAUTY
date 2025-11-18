@@ -4,30 +4,50 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
 import { useState } from "react";
 
 const Contact = () => {
   const { toast } = useToast();
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Form state
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+
+  // Handle form submission and send data to Supabase
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Message Sent!",
-      description: "Thank you for reaching out. We'll get back to you soon.",
-    });
-    setFormData({ name: "", email: "", message: "" });
+
+    const { data, error } = await supabase
+      .from("messages") // your table name
+      .insert([{ name, email, message }]);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
+      console.error(error);
+    } else {
+      toast({
+        title: "Message Sent!",
+        description: "Thank you for reaching out. We'll get back to you soon.",
+      });
+      setName("");
+      setEmail("");
+      setMessage("");
+    }
   };
 
+  // Contact info and social links
   const contactInfo = [
     {
       icon: MapPin,
       title: "Our Location",
-      content: "61, Challenge/Molete Road, Opposite Baptist Church, Idi-Odo, Challenge Ibadan, Oyo State, Nigeria.",
+      content:
+        "61, Challenge/Molete Road, Opposite Baptist Church, Idi-Odo, Challenge Ibadan, Oyo State, Nigeria.",
       link: null,
     },
     {
@@ -89,12 +109,13 @@ const Contact = () => {
                       </label>
                       <Input
                         id="name"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         placeholder="Enter your name"
                         required
                       />
                     </div>
+
                     <div>
                       <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
                         Email Address
@@ -102,25 +123,27 @@ const Contact = () => {
                       <Input
                         id="email"
                         type="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         placeholder="your.email@example.com"
                         required
                       />
                     </div>
+
                     <div>
                       <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
                         Message
                       </label>
                       <Textarea
                         id="message"
-                        value={formData.message}
-                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
                         placeholder="How can we help you?"
                         rows={6}
                         required
                       />
                     </div>
+
                     <Button type="submit" className="w-full bg-gradient-to-r from-primary to-primary-dark">
                       Send Message
                     </Button>
@@ -143,7 +166,7 @@ const Contact = () => {
                         <div>
                           <h3 className="font-semibold text-foreground mb-1">{info.title}</h3>
                           {info.link ? (
-                            <a 
+                            <a
                               href={info.link}
                               target="_blank"
                               rel="noopener noreferrer"
@@ -196,7 +219,7 @@ const Contact = () => {
                 Your generous donations help us transform lives and bring hope to those in need.
               </p>
             </div>
-            
+
             <Card className="border-2 border-gold/20">
               <CardContent className="p-8">
                 <h3 className="text-xl font-semibold text-primary mb-6 text-center">Bank Account Details</h3>
