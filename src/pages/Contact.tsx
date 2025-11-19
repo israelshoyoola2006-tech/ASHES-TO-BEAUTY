@@ -102,52 +102,42 @@ const Contact = () => {
               <h2 className="text-3xl font-bold text-primary mb-6">Send Us a Message</h2>
               <Card>
                 <CardContent className="p-6">
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-                        Your Name
-                      </label>
-                      <Input
-                        id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Enter your name"
-                        required
-                      />
-                    </div>
+                  <form
+  action="https://formspree.io/f/xeonevrr"  // ← Use your Formspree form URL here
+  method="POST"
+  className="space-y-4"
+>
+  <input
+    type="text"
+    name="name"
+    placeholder="Your name"
+    className="w-full p-2 border rounded"
+    required
+  />
 
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-                        Email Address
-                      </label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="your.email@example.com"
-                        required
-                      />
-                    </div>
+  <input
+    type="email"
+    name="email"
+    placeholder="Your email"
+    className="w-full p-2 border rounded"
+    required
+  />
 
-                    <div>
-                      <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
-                        Message
-                      </label>
-                      <Textarea
-                        id="message"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        placeholder="How can we help you?"
-                        rows={6}
-                        required
-                      />
-                    </div>
+  <textarea
+    name="message"
+    placeholder="Your message"
+    className="w-full p-2 border rounded"
+    required
+  ></textarea>
 
-                    <Button type="submit" className="w-full bg-gradient-to-r from-primary to-primary-dark">
-                      Send Message
-                    </Button>
-                  </form>
+  <button
+    type="submit"
+    className="bg-blue-500 text-white px-4 py-2 rounded"
+  >
+    Send Message
+  </button>
+</form>
+
                 </CardContent>
               </Card>
             </div>
