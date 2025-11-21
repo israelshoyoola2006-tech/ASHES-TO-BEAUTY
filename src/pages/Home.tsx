@@ -1,15 +1,59 @@
+import * as React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Heart, Users, GraduationCap, HandHeart, Quote } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import ProgramCard from "@/components/ProgramCard";
-import heroImage from "@/assets/hero-community.jpg";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import heroSlide1 from "@/assets/hero-slide-1.jpg";
+import heroSlide2 from "@/assets/hero-slide-2.jpg";
+import heroSlide3 from "@/assets/hero-slide-3.jpg";
 import empowermentImg from "@/assets/empowerment.jpg";
 import needyImg from "@/assets/needy.jpg";
 import widowsImg from "@/assets/widows.jpg";
 import orphansImg from "@/assets/orphans.jpg";
 
 const Home = () => {
+  const heroSlides = [
+    { 
+      image: heroSlide1, 
+      alt: "Community Empowerment",
+      title: "Inspiring Hope, Transforming Lives.",
+      subtitle: "Building Stronger Communities Together",
+      tagline: "Charitable Initiative"
+    },
+    { 
+      image: heroSlide2, 
+      alt: "Children Learning",
+      title: "Unlocking Minds, Uplifting Communities.",
+      subtitle: "Education Changes Everything",
+      tagline: "Empowering the Next Generation"
+    },
+    { 
+      image: heroSlide3, 
+      alt: "Community Support",
+      title: "Empowered Lives, Limitless Change.",
+      subtitle: "Your Support is Our Story",
+      tagline: "Making a Lasting Impact"
+    },
+  ];
+
+  const [currentSlide, setCurrentSlide] = React.useState(0);
+  const [api, setApi] = React.useState<any>();
+
+  React.useEffect(() => {
+    if (!api) return;
+
+    api.on("select", () => {
+      setCurrentSlide(api.selectedScrollSnap());
+    });
+  }, [api]);
+
   const programs = [
     {
       title: "Empowerment",
@@ -60,31 +104,57 @@ const Home = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary-dark to-primary opacity-90 z-10" />
-        <img 
-          src={heroImage} 
-          alt="Community" 
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="relative z-20 text-center px-4 max-w-4xl animate-fade-in">
-          <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-4 drop-shadow-lg">
-            ASHES TO BEAUTY
-          </h1>
-          <p className="text-2xl md:text-3xl text-primary-foreground mb-2 italic">
-            Inspiring Hope, Transforming Lives.
-          </p>
-          <p className="text-lg md:text-xl text-primary-foreground/90 mb-8">
-            Charitable Initiative
-          </p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold">
-              <Link to="/programs">Our Programs</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="bg-background/20 backdrop-blur text-primary-foreground border-primary-foreground hover:bg-background/30">
-              <Link to="/contact">Get Involved</Link>
-            </Button>
+      {/* Hero Section with Carousel */}
+      <section className="relative h-[600px] overflow-hidden">
+        <Carousel
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          plugins={[
+            Autoplay({
+              delay: 5000,
+            }),
+          ]}
+          setApi={setApi}
+          className="h-full"
+        >
+          <CarouselContent className="h-full">
+            {heroSlides.map((slide, index) => (
+              <CarouselItem key={index} className="h-[600px] relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary-dark/25 to-primary/20 z-10" />
+                <img
+                  src={slide.image}
+                  alt={slide.alt}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+        
+        {/* Text Overlay */}
+        <div className="absolute inset-0 z-20 flex items-center justify-center">
+          <div className="text-center px-4 max-w-5xl">
+            <div key={currentSlide} className="animate-fade-in">
+              <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-6 drop-shadow-2xl leading-tight">
+                {heroSlides[currentSlide].title}
+              </h1>
+              <p className="text-xl md:text-2xl text-primary-foreground/95 mb-3 font-light tracking-wide">
+                {heroSlides[currentSlide].subtitle}
+              </p>
+              <p className="text-base md:text-lg text-primary-foreground/80 mb-10 uppercase tracking-widest font-light">
+                {heroSlides[currentSlide].tagline}
+              </p>
+            </div>
+            <div className="flex gap-4 justify-center flex-wrap animate-fade-in">
+              <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold shadow-lg">
+                <Link to="/programs">Our Programs</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="bg-background/20 backdrop-blur text-primary-foreground border-primary-foreground hover:bg-background/30 shadow-lg">
+                <Link to="/contact">Get Involved</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
